@@ -1,0 +1,33 @@
+version: '3.7'
+
+services:
+        db: 
+            image: mongo:3.6.18-xenial
+            ports: 
+                - "27017:27017"
+            environment: 
+                - MONGO_INITDB_DATABASE=tuto-docker-db
+                - MONGO_INITDB_ROOT_USERNAME=moussa
+                - MONGO_INITDB_ROOT_PASSWORD=keunzeune
+            volumes:
+                - ./mongo/home/mongodb:/home/mongodb
+                - ./mongo/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+            #     - my-mongo-data:/data/db
+            restart: always
+
+        api:
+            build: ./nodeApp
+            volumes: 
+                - ./nodeApp:/usr/src/app
+            ports: 
+                - "3000:3000"
+            links: 
+                - db
+            environment:
+                - PORT=3000
+                - NODE_ENV=development
+            restart: always
+        
+
+volumes: 
+    my-mongo-data:
