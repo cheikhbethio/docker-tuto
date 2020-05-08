@@ -12,7 +12,7 @@ services:
             volumes:
                 - ./mongo/home/mongodb:/home/mongodb
                 - ./mongo/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
-            #     - my-mongo-data:/data/db
+                - my-mongo-data:/data/db
             restart: always
 
         api:
@@ -28,6 +28,14 @@ services:
                 - NODE_ENV=development
             restart: always
         
+        front:
+            build: ./angular-app
+            ports:
+                - "4200:4200"
+            volumes:
+                - ./angular-app:/app
+                - /app/node_modules
+            restart: always
 
 volumes: 
     my-mongo-data:
